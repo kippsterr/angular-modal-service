@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -145,12 +145,6 @@
 	        //  If we have provided any inputs, pass them to the controller.
 	        if (options.inputs) angular.extend(inputs, options.inputs);
 	
-	        //  Compile then link the template element, building the actual element.
-	        //  Set the $element on the inputs so that it can be injected if required.
-	        var linkFn = $compile(template);
-	        var modalElement = linkFn(modalScope);
-	        inputs.$element = modalElement;
-	
 	        //  Create the controller, explicitly specifying the scope to use.
 	        var controllerObjBefore = modalScope[options.controllerAs];
 	        var modalController = $controller(options.controller, inputs, false, options.controllerAs);
@@ -158,6 +152,11 @@
 	        if (options.controllerAs && controllerObjBefore) {
 	          angular.extend(modalController, controllerObjBefore);
 	        }
+	
+	        //  Compile then link the template element, building the actual element.
+	        //  Set the $element on the inputs so that it can be injected if required.
+	        var linkFn = $compile(template);
+	        var modalElement = linkFn(modalScope);
 	
 	        //  Then, append the modal to the dom.
 	        if (options.appendElement) {
@@ -239,6 +238,6 @@
 	  return new ModalService();
 	}]);
 
-/***/ }
+/***/ })
 /******/ ]);
 //# sourceMappingURL=angular-modal-service.js.map
