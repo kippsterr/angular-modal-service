@@ -1,3 +1,11 @@
+## v0.7.12
+
+* Support for configuration of the `$locationChangeSuccess` event. Thanks [smalbs](https://github.com/smalbs).
+
+## v0.6.12
+
+* When a model is opened, we blur any active element. Thanks [samx](https://github.com/samwx)!
+
 ## v0.6.11
 
 * Robustness for 'locationChangeEvent'.

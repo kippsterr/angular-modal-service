@@ -74,8 +74,28 @@ module.factory('ModalService', ['$animate', '$document', '$compile', '$controlle
           var modal = {};
 
           //  Create a new scope for the modal.
-          var modalScope = (options.scope || $rootScope).$new();
-          var rootScopeOnClose = $rootScope.$on('$locationChangeSuccess', cleanUpClose);
+          var modalScope = (options.scope || $rootScope).$new(),
+              rootScopeOnClose = null,
+              locationChangeSuccess = options.locationChangeSuccess;
+
+            //  Allow locationChangeSuccess event registration to be configurable.
+            //  True (default) = event registered immediately
+            //  # (greater than 0) = event registered with delay
+            //  False = disabled
+            if (locationChangeSuccess === false){
+                rootScopeOnClose = angular.noop;
+            }
+            else if (angular.isNumber(locationChangeSuccess) && locationChangeSuccess >= 0) {
+                $timeout(function() {
+                    rootScopeOnClose = $rootScope.$on('$locationChangeSuccess', cleanUpClose);
+                }, locationChangeSuccess);
+            }
+            else {
+                rootScopeOnClose = $rootScope.$on('$locationChangeSuccess', cleanUpClose);
+            }
+
+
+
 
           //  Create the inputs object to the controller - this will include
           //  the scope, as well as all inputs provided.
@@ -139,6 +159,9 @@ module.factory('ModalService', ['$animate', '$document', '$compile', '$controlle
 
           //  ...which is passed to the caller via the promise.
           deferred.resolve(modal);
+
+          // Clear previous input focus to avoid open multiple modals on enter
+          document.activeElement.blur();
 
           //  We can track this modal in our open modals.
           self.openModals.push({ modal: modal, close: inputs.close });
